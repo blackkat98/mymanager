@@ -1,0 +1,21 @@
+{
+  "name": "mymanager",
+  "description": "",
+  "main": "",
+  "authors": [
+    "blackkat98"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/bower_components/",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "AdminLTE": "ColorlibHQ/AdminLTE#^3.0.5"
+  }
+}
