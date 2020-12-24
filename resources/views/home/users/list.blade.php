@@ -28,14 +28,17 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-                <table id="datatable" class="table table-bordered table-striped">
+                <table class="table table-bordered table-striped datatable">
                     <thead>
                         <tr>
                             <th>@lang('Full name')</th>
                             <th>@lang('Username')</th>
+                            <th>@lang('Role')</th>
                             <th>@lang('Email')</th>
                             <th>@lang('Phone')</th>
                             <th>@lang('Address')</th>
+                            <th>@lang('Created at')</th>
+                            <th>@lang('Updated at')</th>
                             <th>@lang('Status')</th>
                             <th>@lang('Action')</th>
                         </tr>
@@ -46,15 +49,25 @@
                                 @if ($user->id == Auth::user()->id)
                                     <th>{{ $user->getFullName() }}</th>
                                     <th>{{ $user->username }}</th>
+                                    <th>
+
+                                    </th>
                                     <th>{{ $user->email }}</th>
                                     <th>{{ $user->phone }}</th>
                                     <th>{{ $user->address }}</th>
+                                    <th>{{ $user->created_at }}</th>
+                                    <th>{{ $user->updated_at }}</th>
                                 @else
                                     <td>{{ $user->getFullName() }}</td>
                                     <td>{{ $user->username }}</td>
+                                    <td>
+
+                                    </td>
                                     <td>{{ $user->email }}</td>
                                     <td>{{ $user->phone }}</td>
                                     <td>{{ $user->address }}</td>
+                                    <td>{{ $user->created_at }}</td>
+                                    <td>{{ $user->updated_at }}</td>
                                 @endif
                                 <td id="status-tag-{{ $user->id }}">
                                     @if ($user->deleted_at)

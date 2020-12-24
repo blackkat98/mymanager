@@ -81,36 +81,69 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 6);
+/******/ 	return __webpack_require__(__webpack_require__.s = 7);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ "./resources/js/custom/user_datatable.js":
-/*!***********************************************!*\
-  !*** ./resources/js/custom/user_datatable.js ***!
-  \***********************************************/
+/***/ "./resources/js/custom/note_list.js":
+/*!******************************************!*\
+  !*** ./resources/js/custom/note_list.js ***!
+  \******************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 var listRoute = $('input#list-route').val();
+var storeRoute = $('input#store-route').val();
+var showRoute = $('input#show-route').val();
 var updateRoute = $('input#update-route').val();
 var deleteRoute = $('input#delete-route').val();
-var restoreRoute = $('input#restore-route').val();
 var csrfToken = $('input#csrf-token').val();
-$(document).on('click', 'button[id^=inactive-btn-]', function () {
-  var userId = this.id.replace('inactive-btn-', '');
-  var url = deleteRoute.slice(0, -1) + userId;
+$(document).on('click', '#create-btn', function () {
+  var data = new FormData($('#_create-form')[0]);
   $.ajax({
-    url: url,
+    url: storeRoute,
     type: 'POST',
-    data: {
-      _token: csrfToken
-    },
+    data: data,
+    processData: false,
+    contentType: false,
     success: function success(res) {
       if (res.status) {
-        $('button#inactive-btn-' + userId).replaceWith("\n                    <button id=\"active-btn-".concat(userId, "\" class=\"btn btn-sm btn-success\"><i class=\"fa fa-play\"></i></button>\n                "));
-        $('td#status-tag-' + userId).html("<span class=\"badge bg-danger\">Inactive</span>");
+        var data = res.data;
+        var content = data.content;
+        content = content.length > 15 ? content.substring(0, 16) + '...' : content;
+        var note = "\n                    <div class=\"col-md-3\" id=\"note-".concat(data.id, "\">\n                        <div class=\"card\" style=\"").concat(data.style, "\">\n                            <div class=\"card-header\">\n                                <div class=\"card-tools float-right\">\n                                    <button id=\"edit-btn-").concat(data.id, "\" class=\"btn btn-xs\" data-toggle=\"modal\" data-target=\"#edit-form\">\n                                        <i class=\"fas fa-eye\"></i>\n                                    </button>\n                                    <button id=\"delete-btn-").concat(data.id, "\" class=\"btn btn-xs\">\n                                        <i class=\"fas fa-trash\"></i>\n                                    </button>\n                                </div>\n                            </div>\n                            <div class=\"card-body\">\n                                ").concat(content, "\n                            </div>\n                        </div>\n                    </div>\n                ");
+        $('#note-list').prepend(note);
+      }
+    },
+    error: function error(e) {
+      console.log(e);
+    }
+  });
+});
+$(document).on('click', 'button[id^=edit-btn-]', function () {
+  var noteId = this.id.replace('edit-btn-', '');
+  var url = showRoute.slice(0, -1) + noteId;
+  $.ajax({
+    url: url,
+    type: 'GET',
+    success: function success(res) {
+      if (res.status) {
+        var style = res.data.style;
+        style = style.replaceAll(/\s/g, '');
+        style = style.split(';');
+        var styles = {};
+        style.forEach(function (s) {
+          if (s) {
+            var splitted = s.split(':');
+            styles[splitted[0]] = splitted[1];
+          }
+        });
+        $('#edit-form textarea[name=content]').val(res.data.content);
+        $('#edit-form input[name=color]').val(styles['color']);
+        $('#edit-form input[name=background-color]').val(styles['background-color']);
+        $('i#sqr-color').css('color', styles['color']);
+        $('i#sqr-bg-color').css('color', styles['background-color']);
       } else {}
     },
     error: function error(e) {
@@ -118,9 +151,9 @@ $(document).on('click', 'button[id^=inactive-btn-]', function () {
     }
   });
 });
-$(document).on('click', 'button[id^=active-btn-]', function () {
-  var userId = this.id.replace('active-btn-', '');
-  var url = restoreRoute.slice(0, -1) + userId;
+$(document).on('click', 'button[id^=delete-btn-]', function () {
+  var noteId = this.id.replace('delete-btn-', '');
+  var url = deleteRoute.slice(0, -1) + noteId;
   $.ajax({
     url: url,
     type: 'POST',
@@ -129,8 +162,7 @@ $(document).on('click', 'button[id^=active-btn-]', function () {
     },
     success: function success(res) {
       if (res.status) {
-        $('button#active-btn-' + userId).replaceWith("\n                    <button id=\"inactive-btn-".concat(userId, "\" class=\"btn btn-sm btn-danger\"><i class=\"fa fa-pause\"></i></button>\n                "));
-        $('td#status-tag-' + userId).html("<span class=\"badge bg-success\">Active</span>");
+        $('#note-' + noteId).remove();
       } else {}
     },
     error: function error(e) {
@@ -141,14 +173,14 @@ $(document).on('click', 'button[id^=active-btn-]', function () {
 
 /***/ }),
 
-/***/ 6:
-/*!*****************************************************!*\
-  !*** multi ./resources/js/custom/user_datatable.js ***!
-  \*****************************************************/
+/***/ 7:
+/*!************************************************!*\
+  !*** multi ./resources/js/custom/note_list.js ***!
+  \************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\codes\mymanager\resources\js\custom\user_datatable.js */"./resources/js/custom/user_datatable.js");
+module.exports = __webpack_require__(/*! D:\codes\mymanager\resources\js\custom\note_list.js */"./resources/js/custom/note_list.js");
 
 
 /***/ })

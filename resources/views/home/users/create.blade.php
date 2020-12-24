@@ -12,6 +12,13 @@
 <div class="row">
     <div class="col-12">
         <div class="card">
+            <div class="card-header">
+                <div class="card-tools float-right">
+                    <a class="btn btn-sm btn-primary" href="{{ route('users') }}">
+                        @lang('Back to list')
+                    </a>
+                </div>
+            </div>
             <div class="card-body">
                 <form method="post" action="{{ route('users-store') }}">
                     @csrf

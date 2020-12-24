@@ -35,3 +35,28 @@ Route::group(['prefix' => 'users'], function () {
     Route::post('/delete/{id}', 'Home\UserController@delete')->name('users-delete');
     Route::post('/restore/{id}', 'Home\UserController@restore')->name('users-restore');
 });
+
+Route::group(['prefix' => 'roles'], function () {
+    Route::get('/', 'Home\RoleController@index')->name('roles');
+    Route::get('/create', 'Home\RoleController@create')->name('roles-create');
+    Route::post('/store', 'Home\RoleController@store')->name('roles-store');
+    Route::get('/edit/{id}', 'Home\RoleController@edit')->name('roles-edit');
+    Route::post('/update/{id}', 'Home\RoleController@update')->name('roles-update');
+    Route::post('/delete/{id}', 'Home\RoleController@delete')->name('roles-delete');
+});
+
+Route::group(['prefix' => 'permissions'], function () {
+    Route::get('/', 'Home\PermissionController@index')->name('permissions');
+    Route::get('/create', 'Home\PermissionController@create')->name('permissions-create');
+    Route::post('/store', 'Home\PermissionController@store')->name('permissions-store');
+    Route::get('/edit/{id}', 'Home\PermissionController@edit')->name('permissions-edit');
+    Route::post('/update/{id}', 'Home\PermissionController@update')->name('permissions-update');
+    Route::post('/delete/{id}', 'Home\PermissionController@delete')->name('permissions-delete');
+});
+
+Route::group(['prefix' => 'notes'], function () {
+    Route::get('/', 'Home\NoteController@index')->name('notes');
+    Route::post('/store', 'Home\NoteController@store')->name('notes-store');
+    Route::get('/show/{id}', 'Home\NoteController@show')->name('notes-show');
+    Route::post('/delete/{id}', 'Home\NoteController@delete')->name('notes-delete');
+});

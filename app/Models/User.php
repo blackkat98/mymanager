@@ -72,4 +72,9 @@ class User extends Authenticatable
     {
         return $this->morphOne(MediaFile::class, 'ownable');
     }
+
+    public function notes()
+    {
+        return $this->hasMany(Note::class, 'user_id');
+    }
 }

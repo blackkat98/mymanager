@@ -1,7 +1,11 @@
 {
     "/js/avatar.js": "/js/avatar.js",
+    "/js/colorpicker.js": "/js/colorpicker.js",
     "/js/datatable.js": "/js/datatable.js",
     "/js/logout.js": "/js/logout.js",
     "/css/img.css": "/css/img.css",
+    "/js/note_list.js": "/js/note_list.js",
+    "/js/summernote.js": "/js/summernote.js",
+    "/js/toasts.js": "/js/toasts.js",
     "/js/user_datatable.js": "/js/user_datatable.js"
 }

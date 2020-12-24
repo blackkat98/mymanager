@@ -68,7 +68,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <a href="#" class="dropdown-item">
                         <!-- Message Start -->
                         <div class="media">
-                        <img src="dist/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
+                        <img src="" alt="" class="img-size-50 mr-3 img-circle">
                             <div class="media-body">
                                 <h3 class="dropdown-item-title">
                                     Brad Diesel
@@ -84,7 +84,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <a href="#" class="dropdown-item">
                         <!-- Message Start -->
                         <div class="media">
-                            <img src="dist/img/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
+                            <img src="" alt="" class="img-size-50 img-circle mr-3">
                             <div class="media-body">
                                 <h3 class="dropdown-item-title">
                                     John Pierce
@@ -100,7 +100,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <a href="#" class="dropdown-item">
                         <!-- Message Start -->
                         <div class="media">
-                            <img src="dist/img/user3-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
+                            <img src="" alt="" class="img-size-50 img-circle mr-3">
                             <div class="media-body">
                                 <h3 class="dropdown-item-title">
                                     Nora Silvester
@@ -183,7 +183,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         <!-- Add icons to the links using the .nav-icon class
                             with font-awesome or any other icon font library -->
-                        <li class="nav-item has-treeview menu-open">
+                        <li class="nav-item has-treeview"><!-- menu-open -->
                             <a href="#" class="nav-link active">
                                 <i class="nav-icon fas fa-users"></i>
                                 <p>
@@ -202,6 +202,69 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                     <a href="{{ route('users-create') }}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>@lang('Create')</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link active">
+                                <i class="nav-icon fas fa-user-tag"></i>
+                                <p>
+                                    @lang('Role Management')
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{{ route('roles') }}" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>@lang('List')</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('roles-create') }}" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>@lang('Create')</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link active">
+                                <i class="nav-icon fas fa-user-lock"></i>
+                                <p>
+                                    @lang('Permission Management')
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{{ route('permissions') }}" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>@lang('List')</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('permissions-create') }}" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>@lang('Create')</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link active">
+                                <i class="nav-icon fas fa-sticky-note"></i>
+                                <p>
+                                    @lang('Note Management')
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{{ route('notes') }}" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>@lang('List')</p>
                                     </a>
                                 </li>
                             </ul>
@@ -239,8 +302,24 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <div class="container-fluid">
                 @if ($errors->any())
                     @foreach ($errors->all() as $error)
-                        <div class="badge bg-danger">{{$error}}</div>
+                        <input class="hidden error-message" value="{{ $error }}">
                     @endforeach
+                @endif
+
+                @if (session()->has('success'))
+                    <input class="hidden success-message" value="{{ session()->get('success') }}">
+                @endif
+
+                @if (session()->has('error'))
+                    <input class="hidden error-message" value="{{ session()->get('error') }}">
+                @endif
+
+                @if (session()->has('warning'))
+                    <input class="hidden warning-message" value="{{ session()->get('warning') }}">
+                @endif
+
+                @if (session()->has('message'))
+                    <input class="hidden message-message" value="{{ session()->get('message') }}">
                 @endif
 
                 @yield('content')

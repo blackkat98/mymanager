@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -93,9 +93,9 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-$('table#datatable').DataTable({
+$('table.datatable').DataTable({
   "paging": true,
-  "lengthChange": false,
+  "lengthChange": true,
   "searching": true,
   "ordering": true,
   "info": true,
@@ -105,7 +105,7 @@ $('table#datatable').DataTable({
 
 /***/ }),
 
-/***/ 2:
+/***/ 3:
 /*!************************************************!*\
   !*** multi ./resources/js/custom/datatable.js ***!
   \************************************************/

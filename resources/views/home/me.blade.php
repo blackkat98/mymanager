@@ -106,7 +106,7 @@
                                 <label>{{ __('Address') }}</label>
                                 <textarea class="form-control" name="address">{{ Auth::user()->address }}</textarea>
                             </div>
-                            <button type="submit" class="btn btn-primary">{{ __('Update') }}</button>
+                            <button type="submit" class="btn btn-success">{{ __('Update') }}</button>
                         </form>
                     </div>
                     <div class="tab-pane" id="pwd">
@@ -134,7 +134,7 @@
                                 <label>{{ __('Confirm new password') }}</label>
                                 <input type="password" class="form-control" name="new_password_confirmation">
                             </div>
-                            <button type="submit" class="btn btn-primary">{{ __('Update') }}</button>
+                            <button type="submit" class="btn btn-success">{{ __('Update') }}</button>
                         </form>
                     </div>
                     <div class="tab-pane" id="activity">
@@ -157,7 +157,7 @@
                                     <option value="vi" {{ Auth::user()->lang == 'vi' ? 'selected' : '' }}>{{ __('Vietnamese') }}</option>
                                 </select>
                             </div>
-                            <button type="submit" class="btn btn-primary">{{ __('Update') }}</button>
+                            <button type="submit" class="btn btn-success">{{ __('Update') }}</button>
                         </form>
                     </div>
                     <!-- /.tab-pane -->
@@ -173,4 +173,5 @@
 
 @section('scripts')
 <script src="{{ mix('js/avatar.js') }}"></script>
+<script src="{{ mix('js/toasts.js') }}"></script>
 @endsection

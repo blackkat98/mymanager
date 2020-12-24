@@ -81,74 +81,49 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 6);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ "./resources/js/custom/user_datatable.js":
-/*!***********************************************!*\
-  !*** ./resources/js/custom/user_datatable.js ***!
-  \***********************************************/
+/***/ "./resources/js/custom/toasts.js":
+/*!***************************************!*\
+  !*** ./resources/js/custom/toasts.js ***!
+  \***************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-var listRoute = $('input#list-route').val();
-var updateRoute = $('input#update-route').val();
-var deleteRoute = $('input#delete-route').val();
-var restoreRoute = $('input#restore-route').val();
-var csrfToken = $('input#csrf-token').val();
-$(document).on('click', 'button[id^=inactive-btn-]', function () {
-  var userId = this.id.replace('inactive-btn-', '');
-  var url = deleteRoute.slice(0, -1) + userId;
-  $.ajax({
-    url: url,
-    type: 'POST',
-    data: {
-      _token: csrfToken
-    },
-    success: function success(res) {
-      if (res.status) {
-        $('button#inactive-btn-' + userId).replaceWith("\n                    <button id=\"active-btn-".concat(userId, "\" class=\"btn btn-sm btn-success\"><i class=\"fa fa-play\"></i></button>\n                "));
-        $('td#status-tag-' + userId).html("<span class=\"badge bg-danger\">Inactive</span>");
-      } else {}
-    },
-    error: function error(e) {
-      console.log(e);
-    }
-  });
+$('input.error-message').each(function (index, obj) {
+  toastr.error(obj.value);
 });
-$(document).on('click', 'button[id^=active-btn-]', function () {
-  var userId = this.id.replace('active-btn-', '');
-  var url = restoreRoute.slice(0, -1) + userId;
-  $.ajax({
-    url: url,
-    type: 'POST',
-    data: {
-      _token: csrfToken
-    },
-    success: function success(res) {
-      if (res.status) {
-        $('button#active-btn-' + userId).replaceWith("\n                    <button id=\"inactive-btn-".concat(userId, "\" class=\"btn btn-sm btn-danger\"><i class=\"fa fa-pause\"></i></button>\n                "));
-        $('td#status-tag-' + userId).html("<span class=\"badge bg-success\">Active</span>");
-      } else {}
-    },
-    error: function error(e) {
-      console.log(e);
-    }
-  });
-});
+var successMessage = $('input.success-message').val();
+
+if (typeof successMessage === 'string' && successMessage.length > 0) {
+  toastr.success(successMessage);
+}
+
+var warningMessage = $('input.warning-message').val();
+
+if (typeof warningMessage === 'string' && warningMessage.length > 0) {
+  toastr.warning(warningMessage);
+}
+
+var messageMessage = $('input.message-message').val();
+
+if (typeof messageMessage === 'string' && messageMessage.length > 0) {
+  toastr.info(messageMessage);
+}
 
 /***/ }),
 
-/***/ 6:
-/*!*****************************************************!*\
-  !*** multi ./resources/js/custom/user_datatable.js ***!
-  \*****************************************************/
+/***/ 2:
+/*!*********************************************!*\
+  !*** multi ./resources/js/custom/toasts.js ***!
+  \*********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\codes\mymanager\resources\js\custom\user_datatable.js */"./resources/js/custom/user_datatable.js");
+module.exports = __webpack_require__(/*! D:\codes\mymanager\resources\js\custom\toasts.js */"./resources/js/custom/toasts.js");
 
 
 /***/ })

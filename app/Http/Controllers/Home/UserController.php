@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 
-class UserController extends Controller
+class UserController extends HomeController
 {
     /**
      * Display a listing of the resource.
