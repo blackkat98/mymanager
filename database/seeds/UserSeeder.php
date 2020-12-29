@@ -27,7 +27,7 @@ class UserSeeder extends Seeder
             'first_name' => 'Nam',
             'middle_name' => 'Hoang',
             'last_name' => 'Tong',
-            'username' => 'admin',
+            'username' => 'admin2',
             'password' => Hash::make('111111'),
             'email' => 'nam.th.200698@gmail.com',
             'phone' => '0999999999',

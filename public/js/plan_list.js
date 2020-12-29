@@ -81,26 +81,100 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 8);
+/******/ 	return __webpack_require__(__webpack_require__.s = 9);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ "./resources/js/custom/note_list.js":
+/***/ "./resources/js/custom/plan_list.js":
 /*!******************************************!*\
-  !*** ./resources/js/custom/note_list.js ***!
+  !*** ./resources/js/custom/plan_list.js ***!
   \******************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 var listRoute = $('input#list-route').val();
+var getRoute = $('input#get-route').val();
 var storeRoute = $('input#store-route').val();
 var showRoute = $('input#show-route').val();
 var updateRoute = $('input#update-route').val();
 var deleteRoute = $('input#delete-route').val();
 var csrfToken = $('input#csrf-token').val();
-$(document).on('click', '#create-btn', function () {
-  var data = new FormData($('#_create-form')[0]);
+var Calendar = FullCalendar.Calendar;
+var calendarDiv = document.getElementById('calendar');
+var calendar = new Calendar(calendarDiv, {
+  plugins: ['bootstrap', 'interaction', 'dayGrid', 'timeGrid'],
+  header: {
+    left: 'prev,next today',
+    center: 'title',
+    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+  },
+  themeSystem: 'bootstrap',
+  events: [],
+  editable: true,
+  eventRender: function eventRender(event) {
+    var fcContent = event.el.firstChild;
+    fcContent.setAttribute('id', event.event.id);
+  },
+  eventDrop: function eventDrop(event) {
+    var planId = event.event.id.replace('plan-event-', '');
+    var url = updateRoute.slice(0, -1) + planId;
+    $.ajax({
+      url: url,
+      type: 'POST',
+      data: {
+        _token: csrfToken,
+        name: event.event.title,
+        starts_at: moment(event.event.start).format('YYYY-MM-DD hh:mm:ss'),
+        ends_at: moment(event.event.start).add(1, 'hours').format('YYYY-MM-DD hh:mm:ss'),
+        color: event.event.backgroundColor
+      },
+      success: function success(res) {
+        console.log(res.message);
+        console.log(res.data);
+      },
+      error: function error(e) {
+        console.log(e);
+      }
+    });
+  }
+});
+calendar.render();
+$.ajax({
+  url: getRoute,
+  type: 'GET',
+  success: function success(res) {
+    res.forEach(function (element) {
+      var event = {
+        id: 'plan-event-' + element.id,
+        title: element.name,
+        start: new Date(element.starts_at),
+        end: new Date(element.ends_at),
+        backgroundColor: element.style.replace('color: ', ''),
+        borderColor: element.style.replace('color: ', '')
+      };
+      calendar.addEvent(event);
+    });
+  },
+  error: function error(e) {
+    console.log(e);
+  }
+});
+$('.fc-color-picker.plan-create-color-picker .fa-square').on('click', function () {
+  var color = $(this).css('color');
+  $('input[name=color]').val(color);
+  $('#create-btn').css('background-color', color);
+  $('#color-sample').css('color', color);
+});
+$('.fc-color-picker.plan-edit-color-picker .fa-square').on('click', function () {
+  var color = $(this).css('color');
+  $('input#plan-color').val(color);
+  $('#plan-color-sample').css('color', color);
+});
+$(document).on('click', '#create-btn', function (event) {
+  event.preventDefault();
+  var data = new FormData($('#create-form')[0]);
+  $('input[name=name]').val('');
   $.ajax({
     url: storeRoute,
     type: 'POST',
@@ -108,53 +182,81 @@ $(document).on('click', '#create-btn', function () {
     processData: false,
     contentType: false,
     success: function success(res) {
-      if (res.status) {
-        var data = res.data;
-        var content = data.content;
-        content = content.length > 15 ? content.substring(0, 16) + '...' : content;
-        var note = "\n                    <div class=\"col-md-3\" id=\"note-".concat(data.id, "\">\n                        <div class=\"card\" style=\"").concat(data.style, "\">\n                            <div class=\"card-header\">\n                                <div class=\"card-tools float-right\">\n                                    <button id=\"edit-btn-").concat(data.id, "\" class=\"btn btn-xs\" data-toggle=\"modal\" data-target=\"#edit-form\">\n                                        <i class=\"fas fa-eye\"></i>\n                                    </button>\n                                    <button id=\"delete-btn-").concat(data.id, "\" class=\"btn btn-xs\">\n                                        <i class=\"fas fa-trash\"></i>\n                                    </button>\n                                </div>\n                            </div>\n                            <div class=\"card-body\">\n                                ").concat(content, "\n                            </div>\n                        </div>\n                    </div>\n                ");
-        $('#note-list').prepend(note);
-      }
+      var event = {
+        id: 'plan-event-' + res.data.id,
+        title: res.data.name,
+        start: new Date(res.data.starts_at),
+        end: new Date(res.data.ends_at),
+        backgroundColor: res.data.style.replace('color: ', ''),
+        borderColor: res.data.style.replace('color: ', '')
+      };
+      calendar.addEvent(event);
     },
     error: function error(e) {
       console.log(e);
     }
   });
 });
-$(document).on('click', 'button[id^=edit-btn-]', function () {
-  var noteId = this.id.replace('edit-btn-', '');
-  var url = showRoute.slice(0, -1) + noteId;
+$(document).on('dblclick', '.fc-content', function () {
+  $('button#edit-btn').trigger('click');
+  var elementId = this.id;
+  var planId = elementId.replace('plan-event-', '');
+  var url = showRoute.slice(0, -1) + planId;
   $.ajax({
     url: url,
     type: 'GET',
     success: function success(res) {
-      if (res.status) {
-        var style = res.data.style;
-        style = style.replaceAll(/\s/g, '');
-        style = style.split(';');
-        var styles = {};
-        style.forEach(function (s) {
-          if (s) {
-            var splitted = s.split(':');
-            styles[splitted[0]] = splitted[1];
-          }
-        });
-        $('#edit-form input#note-id').val(noteId);
-        $('#edit-form textarea[name=content]').val(res.data.content);
-        $('#edit-form input[name=color]').val(styles['color']);
-        $('#edit-form input[name=background-color]').val(styles['background-color']);
-        $('i#sqr-color').css('color', styles['color']);
-        $('i#sqr-bg-color').css('color', styles['background-color']);
-      } else {}
+      $('input#plan-id').val(res.id);
+      $('input#plan-name').val(res.name);
+      $('input#plan-time').val(res.starts_at + ' - ' + res.ends_at);
+      $('input#plan-color').val(res.style.replace('color: ', ''));
+      $('#plan-color-sample').css('color', res.style.replace('color: ', ''));
     },
     error: function error(e) {
       console.log(e);
     }
   });
 });
-$(document).on('click', 'button[id^=delete-btn-]', function () {
-  var noteId = this.id.replace('delete-btn-', '');
-  var url = deleteRoute.slice(0, -1) + noteId;
+$(document).on('click', 'button#update-btn', function () {
+  var planId = $('input#plan-id').val();
+  var url = updateRoute.slice(0, -1) + planId;
+  var name = $('input#plan-name').val();
+  var timeRange = $('input#plan-time').val();
+  var range = timeRange.split(' - ');
+  var startTime = range[0];
+  var endTime = range[1];
+  var color = $('input#plan-color').val();
+  $.ajax({
+    url: url,
+    type: 'POST',
+    data: {
+      _token: csrfToken,
+      name: name,
+      starts_at: startTime,
+      ends_at: endTime,
+      color: color
+    },
+    success: function success(res) {
+      var eventContainer = calendar.getEventById('plan-event-' + planId);
+      eventContainer.remove();
+      var event = {
+        id: 'plan-event-' + res.data.id,
+        title: res.data.name,
+        start: new Date(res.data.starts_at),
+        end: new Date(res.data.ends_at),
+        backgroundColor: res.data.style.replace('color: ', ''),
+        borderColor: res.data.style.replace('color: ', '')
+      };
+      calendar.addEvent(event);
+    },
+    error: function error(e) {
+      console.log(e);
+    }
+  });
+});
+$(document).on('click', 'button#delete-btn', function () {
+  var planId = $('input#plan-id').val();
+  var url = deleteRoute.slice(0, -1) + planId;
   $.ajax({
     url: url,
     type: 'POST',
@@ -163,32 +265,11 @@ $(document).on('click', 'button[id^=delete-btn-]', function () {
     },
     success: function success(res) {
       if (res.status) {
-        $('#note-' + noteId).remove();
-      } else {}
-    },
-    error: function error(e) {
-      console.log(e);
-    }
-  });
-});
-$(document).on('click', '#edit-btn', function () {
-  var noteId = $('#note-id').val();
-  var url = updateRoute.slice(0, -1) + noteId;
-  var data = new FormData($('#_edit-form')[0]);
-  $.ajax({
-    url: url,
-    type: 'POST',
-    data: data,
-    processData: false,
-    contentType: false,
-    success: function success(res) {
-      if (res.status) {
-        var data = res.data;
-        var content = data.content;
-        content = content.length > 15 ? content.substring(0, 16) + '...' : content;
-        var note = "\n                    <div class=\"col-md-3\" id=\"note-".concat(data.id, "\">\n                        <div class=\"card\" style=\"").concat(data.style, "\">\n                            <div class=\"card-header\">\n                                <div class=\"card-tools float-right\">\n                                    <button id=\"edit-btn-").concat(data.id, "\" class=\"btn btn-xs\" data-toggle=\"modal\" data-target=\"#edit-form\">\n                                        <i class=\"fas fa-eye\"></i>\n                                    </button>\n                                    <button id=\"delete-btn-").concat(data.id, "\" class=\"btn btn-xs\">\n                                        <i class=\"fas fa-trash\"></i>\n                                    </button>\n                                </div>\n                            </div>\n                            <div class=\"card-body\">\n                                ").concat(content, "\n                            </div>\n                        </div>\n                    </div>\n                ");
-        $('#note-' + noteId).replaceWith(note);
-      } else {}
+        var eventContainer = calendar.getEventById('plan-event-' + planId);
+        eventContainer.remove();
+      } else {
+        console.log(res.message);
+      }
     },
     error: function error(e) {
       console.log(e);
@@ -198,14 +279,14 @@ $(document).on('click', '#edit-btn', function () {
 
 /***/ }),
 
-/***/ 8:
+/***/ 9:
 /*!************************************************!*\
-  !*** multi ./resources/js/custom/note_list.js ***!
+  !*** multi ./resources/js/custom/plan_list.js ***!
   \************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\codes\mymanager\resources\js\custom\note_list.js */"./resources/js/custom/note_list.js");
+module.exports = __webpack_require__(/*! D:\codes\mymanager\resources\js\custom\plan_list.js */"./resources/js/custom/plan_list.js");
 
 
 /***/ })

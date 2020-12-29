@@ -77,4 +77,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Note::class, 'user_id');
     }
+
+    public function plans()
+    {
+        return $this->hasMany(Plan::class, 'user_id');
+    }
 }

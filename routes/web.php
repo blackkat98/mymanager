@@ -61,3 +61,12 @@ Route::group(['prefix' => 'notes'], function () {
     Route::post('/update/{id}', 'Home\NoteController@update')->name('notes-update');
     Route::post('/delete/{id}', 'Home\NoteController@delete')->name('notes-delete');
 });
+
+Route::group(['prefix' => 'plans'], function () {
+    Route::get('/', 'Home\PlanController@index')->name('plans');
+    Route::get('/get', 'Home\PlanController@get')->name('plans-get');
+    Route::post('/store', 'Home\PlanController@store')->name('plans-store');
+    Route::get('/show/{id}', 'Home\PlanController@show')->name('plans-show');
+    Route::post('/update/{id}', 'Home\PlanController@update')->name('plans-update');
+    Route::post('/delete/{id}', 'Home\PlanController@delete')->name('plans-delete');
+});
