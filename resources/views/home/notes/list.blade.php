@@ -18,7 +18,7 @@
 @section('content')
 <input id="store-route" class="hidden" value="{{ route('notes-store') }}">
 <input id="show-route" class="hidden" value="{{ route('notes-show', ['id' => 'x']) }}">
-<input id="update-route" class="hidden" value="">
+<input id="update-route" class="hidden" value="{{ route('notes-update', ['id' => 'x']) }}">
 <input id="delete-route" class="hidden" value="{{ route('notes-delete', ['id' => 'x']) }}">
 <input id="csrf-token" class="hidden" value="{{ csrf_token() }}">
 <div class="row">
@@ -107,6 +107,7 @@
         <div class="modal-content">
             <form id="_edit-form">
                 @csrf
+                <input class="hidden" id="note-id">
                 <div class="modal-header">
                     <h4 class="modal-title">@lang('Edit')</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">

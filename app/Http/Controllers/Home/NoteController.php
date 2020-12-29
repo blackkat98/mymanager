@@ -129,7 +129,57 @@ class NoteController extends HomeController
      */
     public function update(NoteRequest $request, $id)
     {
-        //
+        $note = Note::find($id);
+
+        if (!$note || $note->user_id != Auth::user()->id) {
+            return [
+                'status' => false,
+            ];
+        }
+
+        $userId = Auth::user()->id;
+        $content = htmlspecialchars($request->input('content'));
+        $color = $request->input('color');
+        $backgroundColor = $request->input('background-color');
+
+        if (!$color || !$backgroundColor) {
+            $style = '';
+        } else {
+            $style = "color: $color; background-color: $backgroundColor;";
+        }
+
+        if (!$style) {
+            return [
+                'status' => false,
+                'message' => __('Invalid style'),
+            ];
+        }
+
+        if (strtoupper($color) == strtoupper($backgroundColor)) {
+            return [
+                'status' => false,
+                'message' => __('Color and background-color are the same'),
+            ];
+        }
+
+        $commit = $note->update([
+            'user_id' => $userId,
+            'content' => $content,
+            'style' => $style,
+        ]);
+
+        if ($commit) {
+            return [
+                'status' => true,
+                'message' => __('Successfully updated'),
+                'data' => $note,
+            ];
+        } else {
+            return [
+                'status' => false,
+                'message' => __('Failed to update'),
+            ];
+        }
     }
 
     /**

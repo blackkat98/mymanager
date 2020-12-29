@@ -66,6 +66,7 @@ $(document).on('click', 'button[id^=edit-btn-]', function () {
                     }
                 })
                 
+                $('#edit-form input#note-id').val(noteId)
                 $('#edit-form textarea[name=content]').val(res.data.content)
                 $('#edit-form input[name=color]').val(styles['color'])
                 $('#edit-form input[name=background-color]').val(styles['background-color'])
@@ -92,6 +93,51 @@ $(document).on('click', 'button[id^=delete-btn-]', function () {
         success: function (res) {
             if (res.status) {
                 $('#note-' + noteId).remove()
+            } else {
+
+            }
+        }, error: function (e) {
+            console.log(e)
+        }
+    })
+})
+
+$(document).on('click', '#edit-btn', function () {
+    var noteId = $('#note-id').val()
+    var url = updateRoute.slice(0, -1) + noteId
+    var data = new FormData($('#_edit-form')[0])
+    
+    $.ajax({
+        url: url,
+        type: 'POST',
+        data: data,
+        processData: false,
+        contentType: false,
+        success: function (res) {
+            if (res.status) {
+                var data = res.data
+                var content = data.content
+                content = content.length > 15 ? content.substring(0, 16) + '...' : content
+                var note = `
+                    <div class="col-md-3" id="note-${data.id}">
+                        <div class="card" style="${data.style}">
+                            <div class="card-header">
+                                <div class="card-tools float-right">
+                                    <button id="edit-btn-${data.id}" class="btn btn-xs" data-toggle="modal" data-target="#edit-form">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button id="delete-btn-${data.id}" class="btn btn-xs">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                ${content}
+                            </div>
+                        </div>
+                    </div>
+                `
+                $('#note-' + noteId).replaceWith(note)
             } else {
 
             }

@@ -139,6 +139,7 @@ $(document).on('click', 'button[id^=edit-btn-]', function () {
             styles[splitted[0]] = splitted[1];
           }
         });
+        $('#edit-form input#note-id').val(noteId);
         $('#edit-form textarea[name=content]').val(res.data.content);
         $('#edit-form input[name=color]').val(styles['color']);
         $('#edit-form input[name=background-color]').val(styles['background-color']);
@@ -163,6 +164,30 @@ $(document).on('click', 'button[id^=delete-btn-]', function () {
     success: function success(res) {
       if (res.status) {
         $('#note-' + noteId).remove();
+      } else {}
+    },
+    error: function error(e) {
+      console.log(e);
+    }
+  });
+});
+$(document).on('click', '#edit-btn', function () {
+  var noteId = $('#note-id').val();
+  var url = updateRoute.slice(0, -1) + noteId;
+  var data = new FormData($('#_edit-form')[0]);
+  $.ajax({
+    url: url,
+    type: 'POST',
+    data: data,
+    processData: false,
+    contentType: false,
+    success: function success(res) {
+      if (res.status) {
+        var data = res.data;
+        var content = data.content;
+        content = content.length > 15 ? content.substring(0, 16) + '...' : content;
+        var note = "\n                    <div class=\"col-md-3\" id=\"note-".concat(data.id, "\">\n                        <div class=\"card\" style=\"").concat(data.style, "\">\n                            <div class=\"card-header\">\n                                <div class=\"card-tools float-right\">\n                                    <button id=\"edit-btn-").concat(data.id, "\" class=\"btn btn-xs\" data-toggle=\"modal\" data-target=\"#edit-form\">\n                                        <i class=\"fas fa-eye\"></i>\n                                    </button>\n                                    <button id=\"delete-btn-").concat(data.id, "\" class=\"btn btn-xs\">\n                                        <i class=\"fas fa-trash\"></i>\n                                    </button>\n                                </div>\n                            </div>\n                            <div class=\"card-body\">\n                                ").concat(content, "\n                            </div>\n                        </div>\n                    </div>\n                ");
+        $('#note-' + noteId).replaceWith(note);
       } else {}
     },
     error: function error(e) {

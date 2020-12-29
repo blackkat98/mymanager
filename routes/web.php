@@ -58,5 +58,6 @@ Route::group(['prefix' => 'notes'], function () {
     Route::get('/', 'Home\NoteController@index')->name('notes');
     Route::post('/store', 'Home\NoteController@store')->name('notes-store');
     Route::get('/show/{id}', 'Home\NoteController@show')->name('notes-show');
+    Route::post('/update/{id}', 'Home\NoteController@update')->name('notes-update');
     Route::post('/delete/{id}', 'Home\NoteController@delete')->name('notes-delete');
 });
